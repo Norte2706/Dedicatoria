@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Para Ti, Mi Amor</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- Partículas de fondo -->
+  <div class="particles" id="particles"></div>
+
+  <!-- SECCIÓN HERO - Dedicatoria -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="subtitulo">✦ Una dedicatoria para ti ✦</p>
+      <h1 class="titulo">Mi Amor,<br/><em>mi todo</em></h1>
+      <p class="mensaje">
+        Desde que llegaste a mi vida, el mundo tiene otro color.<br/>
+        Eres la razón de mis sonrisas, el abrigo de mis días difíciles,<br/>
+        y el sueño más hermoso que se ha hecho realidad.<br/>
+        <strong>Te amo hoy, mañana y siempre.</strong>
+      </p>
+      <div class="separador">❤</div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN FOTOS con efecto corazón -->
+  <section class="galeria-section">
+    <h2 class="galeria-titulo">Nuestros momentos</h2>
+    <p class="galeria-sub">Acerca el cursor o toca las fotos ✨</p>
+
+    <div class="galeria" id="galeria">
+      <!-- Foto 1 -->
+      <div class="foto-card" id="card1">
+        <div class="foto-inner">
+          <img src="foto1.jpg" alt="Momento 1" onerror="this.style.background='linear-gradient(135deg,#f8a5c2,#f78fb3)'; this.alt=''; this.style.height='100%'"/>
+          <div class="foto-overlay">
+            <span>💕 Recuerdo 1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foto 2 (centro, más grande) -->
+      <div class="foto-card foto-center" id="card2">
+        <div class="foto-inner">
+          <img src="foto2.jpg" alt="Momento 2" onerror="this.style.background='linear-gradient(135deg,#e84393,#c0392b)'; this.alt=''; this.style.height='100%'"/>
+          <div class="foto-overlay">
+            <span>❤ Nuestro favorito</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foto 3 -->
+      <div class="foto-card" id="card3">
+        <div class="foto-inner">
+          <img src="foto3.jpg" alt="Momento 3" onerror="this.style.background='linear-gradient(135deg,#f8a5c2,#e84393)'; this.alt=''; this.style.height='100%'"/>
+          <div class="foto-overlay">
+            <span>💕 Recuerdo 3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Corazón SVG que aparece al hover -->
+    <div class="corazon-svg" id="corazonSvg">
+      <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100,160 C100,160 20,100 20,55 C20,30 40,15 60,15 C75,15 90,25 100,40 C110,25 125,15 140,15 C160,15 180,30 180,55 C180,100 100,160 100,160Z" fill="#e84393" opacity="0.18"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SECCIÓN VIDEO -->
+  <section class="video-section">
+    <h2 class="video-titulo">Una canción para ti 🎵</h2>
+    <p class="video-sub">Cada nota lleva un pedacito de mi corazón</p>
+    <div class="video-wrapper">
+      <a
+        href="https://www.youtube.com/watch?v=450p7goxZqg"
+        class="video-link"
+        target="_blank"
+        rel="noopener"
+      >
+        <div class="video-thumbnail">
+          <div class="play-btn">▶</div>
+          <span class="video-label">Ver video — "Perfect" Ed Sheeran</span>
+        </div>
+      </a>
+      <!-- Cambia el enlace de arriba por el de tu video -->
+    </div>
+    <p class="video-hint">💡 Tip: Reemplaza el enlace con tu video favorito</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>Hecho con todo el amor del mundo 💖</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
