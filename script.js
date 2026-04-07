@@ -295,3 +295,41 @@ function terminarJuego() {
 
 document.getElementById('btnJugar').addEventListener('click', iniciarJuego);
 document.getElementById('btnReiniciar').addEventListener('click', iniciarJuego);
+
+function abrirWhatsApp() {
+  const numero  = '5217351619885'; // ← tu número aquí
+  const mensaje = encodeURIComponent(
+    '💖 Hola amor, actualicé nuestra página especial para ti. Entra a verla'
+  );
+
+  const esMovil = /Android|iPhone|iPad/i.test(navigator.userAgent);
+
+  if (esMovil) {
+    // En celular abre la app de WhatsApp
+    window.open(`https://wa.me/${numero}?text=${mensaje}`, '_blank');
+  } else {
+    // En computadora abre WhatsApp Desktop
+    window.location.href = `whatsapp://send?phone=${numero}&text=${mensaje}`;
+
+    // Si WhatsApp Desktop no está instalado, abre WhatsApp Web como respaldo
+    setTimeout(() => {
+      window.open(`https://web.whatsapp.com/send?phone=${numero}&text=${mensaje}`, '_blank');
+    }, 2500);
+  }
+}
+/////////////////////////////////////
+const navMenu  = document.getElementById('navMenu');
+const navLinks = document.getElementById('navLinks');
+if (navMenu && navLinks) {
+  navMenu.addEventListener('click', () => {
+    navLinks.classList.toggle('abierto');
+    navMenu.textContent = navLinks.classList.contains('abierto') ? '✕' : '☰';
+  });
+  // Cerrar al dar clic en un link
+  navLinks.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('abierto');
+      navMenu.textContent = '☰';
+    });
+  });
+}
