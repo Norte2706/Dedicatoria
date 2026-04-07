@@ -299,7 +299,7 @@ document.getElementById('btnReiniciar').addEventListener('click', iniciarJuego);
 function abrirWhatsApp() {
   const numero  = '5217351619885'; // ← tu número aquí
   const mensaje = encodeURIComponent(
-    '💖 Hola amor, actualicé nuestra página especial para ti. Entra a verla'
+    'Hola amor, actualicé nuestra página especial para ti. Entra a verla'
   );
 
   const esMovil = /Android|iPhone|iPad/i.test(navigator.userAgent);
