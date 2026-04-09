@@ -6,6 +6,310 @@
   <title>Galería de fotos — Para Ti 💖</title>
   <link rel="stylesheet" href="style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    .galeria-page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding: 120px 30px 80px;
+      background: radial-gradient(ellipse at 50% 20%, #3d0030 0%, var(--fondo) 70%);
+    }
+    .galeria-header {
+      text-align: center;
+      margin-bottom: 50px;
+      animation: aparecer 1.2s ease both;
+    }
+
+    /* ── UPLOAD ZONE ── */
+    .upload-zone {
+      max-width: 680px;
+      margin: 0 auto 60px;
+      border: 2px dashed rgba(232,67,147,0.45);
+      border-radius: 24px;
+      padding: 48px 30px;
+      text-align: center;
+      background: rgba(232,67,147,0.04);
+      cursor: pointer;
+      transition: border-color 0.3s, background 0.3s, transform 0.25s;
+      position: relative;
+      animation: aparecer 1.3s ease both;
+    }
+    .upload-zone:hover,
+    .upload-zone.drag-over {
+      border-color: var(--rosa);
+      background: rgba(232,67,147,0.09);
+      transform: scale(1.01);
+    }
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .upload-icon { font-size: 3.2rem; margin-bottom: 14px; animation: latir 2s ease-in-out infinite; }
+    .upload-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--rosa-claro);
+      margin-bottom: 8px;
+    }
+    .upload-hint { font-size: 0.85rem; color: #8a5070; letter-spacing: 0.06em; }
+    .upload-btn {
+      display: inline-block;
+      margin-top: 20px;
+      background: linear-gradient(135deg, var(--rosa), var(--rosa-oscuro));
+      color: white;
+      border: none;
+      padding: 11px 30px;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-family: 'Lato', sans-serif;
+      box-shadow: 0 4px 20px var(--sombra);
+      pointer-events: none;
+    }
+
+    /* ── BARRA DE PROGRESO ── */
+    .progress-wrap {
+      max-width: 680px;
+      margin: -40px auto 40px;
+      display: none;
+    }
+    .progress-wrap.visible { display: block; }
+    .progress-bar-bg {
+      background: rgba(232,67,147,0.12);
+      border-radius: 50px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--rosa-oscuro), var(--rosa));
+      border-radius: 50px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .progress-label {
+      font-size: 0.8rem;
+      color: #8a5070;
+      text-align: center;
+      margin-top: 8px;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── CONTROLES ── */
+    .galeria-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .btn-limpiar {
+      background: transparent;
+      color: #8a5070;
+      border: 1px solid rgba(232,67,147,0.25);
+      padding: 9px 22px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-family: 'Lato', sans-serif;
+      cursor: pointer;
+      transition: color 0.3s, border-color 0.3s, background 0.3s;
+    }
+    .btn-limpiar:hover {
+      color: var(--rosa-claro);
+      border-color: var(--rosa);
+      background: rgba(232,67,147,0.08);
+    }
+    .contador-fotos { font-size: 0.82rem; color: #8a5070; letter-spacing: 0.12em; }
+    .contador-fotos span { color: var(--rosa); font-weight: 700; }
+
+    /* ── INDICADOR SYNC ── */
+    .sync-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: #5a9a6a;
+      letter-spacing: 0.08em;
+    }
+    .sync-dot::before {
+      content: '';
+      width: 7px; height: 7px;
+      background: #5a9a6a;
+      border-radius: 50%;
+      animation: pulsar 2s ease-in-out infinite;
+    }
+    .sync-dot.cargando { color: #8a5070; }
+    .sync-dot.cargando::before { background: #8a5070; }
+
+    /* ── MASONRY GRID ── */
+    .masonry-grid {
+      columns: 4 220px;
+      column-gap: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .masonry-item {
+      break-inside: avoid;
+      margin-bottom: 16px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1.5px solid rgba(232,67,147,0.2);
+      position: relative;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+      animation: entrar 0.55s cubic-bezier(0.34,1.56,0.64,1) both;
+      background: #2d0020;
+      transition: transform 0.35s, box-shadow 0.35s, border-color 0.35s;
+    }
+    @keyframes entrar {
+      from { opacity: 0; transform: scale(0.7) rotate(-4deg); }
+      to   { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    .masonry-item:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.5), 0 0 28px var(--sombra);
+      border-color: var(--rosa);
+      z-index: 2;
+    }
+    .masonry-item img { display: block; width: 100%; height: auto; transition: transform 0.5s; }
+    .masonry-item:hover img { transform: scale(1.05); }
+    .masonry-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(180,0,70,0.7) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.35s;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 14px;
+    }
+    .masonry-item:hover .masonry-overlay { opacity: 1; }
+    .overlay-num {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: white;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    }
+    .overlay-del {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      border-radius: 50%;
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .overlay-del:hover { background: rgba(200,0,60,0.5); }
+
+    /* ── VACÍA ── */
+    .galeria-vacia {
+      text-align: center;
+      padding: 60px 20px;
+      color: #6a3050;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+    .galeria-vacia span { display: block; font-size: 3rem; margin-bottom: 16px; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: rgba(10,0,8,0.93);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s;
+      backdrop-filter: blur(6px);
+    }
+    .lightbox.activo { opacity: 1; pointer-events: all; }
+    .lightbox-img-wrap {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 80px rgba(232,67,147,0.3), 0 30px 80px rgba(0,0,0,0.6);
+      border: 1.5px solid rgba(232,67,147,0.4);
+      transform: scale(0.85);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .lightbox.activo .lightbox-img-wrap { transform: scale(1); }
+    .lightbox-img-wrap img { display: block; max-width: 90vw; max-height: 85vh; object-fit: contain; }
+    .lightbox-cerrar {
+      position: absolute;
+      top: 24px; right: 28px;
+      background: rgba(232,67,147,0.15);
+      border: 1px solid rgba(232,67,147,0.35);
+      color: var(--rosa-claro);
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .lightbox-cerrar:hover { background: rgba(232,67,147,0.3); transform: scale(1.1); }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(232,67,147,0.12);
+      border: 1px solid rgba(232,67,147,0.3);
+      color: var(--rosa-claro);
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .lightbox-nav:hover { background: rgba(232,67,147,0.28); }
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: linear-gradient(135deg, var(--rosa-oscuro), var(--rosa));
+      color: white;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-family: 'Lato', sans-serif;
+      z-index: 9999;
+      box-shadow: 0 6px 30px var(--sombra);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .masonry-grid { columns: 2 140px; column-gap: 10px; }
+      .masonry-item { margin-bottom: 10px; }
+      .galeria-page { padding: 110px 16px 60px; }
+    }
+    @media (min-width: 601px) and (max-width: 900px) {
+      .masonry-grid { columns: 3 180px; }
+    }
+  </style>
 </head>
 <body>
   <div class="cursor" id="cursor">💗</div>
@@ -16,28 +320,385 @@
     <div class="nav-links" id="navLinks">
       <a href="index.html" class="nav-link">Inicio</a>
       <a href="galeria.html" class="nav-link activo">Galería 📸</a>
-      <a href="playlist.html" class="nav-link ">Playlist 🎵</a>
-      <a href="bucket.html" class="nav-link ">Cosas por hacer 🗺️</a>
+      <a href="playlist.html" class="nav-link">Playlist 🎵</a>
+      <a href="bucket.html" class="nav-link">Cosas por hacer 🗺️</a>
     </div>
     <button class="nav-menu" id="navMenu">☰</button>
   </nav>
 
-  <section class="proximamente-section">
-    <div class="prox-content">
-      <div class="prox-emoji">📸</div>
-      <h1 class="prox-titulo">Galería de fotos</h1>
-      <p class="prox-sub">Próximamente...</p>
-      <p class="prox-mensaje">Estoy preparando algo muy especial para ti <br/>Vuelve pronto, amor.</p>
-      <div class="prox-corazones">
+  <section class="galeria-page">
+    <div class="galeria-header reveal">
+      <h1 class="sec-titulo">Nuestra Galería 📸</h1>
+      <p class="sec-sub">Sube las fotos más especiales y se acomodarán solas con todo el amor</p>
+    </div>
+
+    <!-- Zona de subida -->
+    <div class="upload-zone reveal" id="uploadZone">
+      <input type="file" id="inputFotos" accept="image/*" multiple/>
+      <div class="upload-icon">📷</div>
+      <p class="upload-title">Arrastra tus fotos aquí</p>
+      <p class="upload-hint">o haz clic para seleccionarlas · JPG, PNG, WEBP, GIF</p>
+      <span class="upload-btn">💖 Elegir fotos</span>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill"></div>
       </div>
-      <a href="index.html" class="prox-btn">← Volver al inicio</a>
+      <p class="progress-label" id="progressLabel">Subiendo fotos…</p>
+    </div>
+
+    <!-- Controles -->
+    <div class="galeria-controls" id="galeriaControls" style="display:none;">
+      <span class="sync-dot" id="syncDot">Sincronizado</span>
+      <p class="contador-fotos">📸 <span id="numFotos">0</span> fotos en la galería</p>
+      <button class="btn-limpiar" id="btnLimpiar">🗑 Limpiar todo</button>
+    </div>
+
+    <!-- Grid masonry -->
+    <div class="masonry-grid" id="masonryGrid">
+      <div class="galeria-vacia" id="galeriaVacia">
+        <span>💕</span>
+        Cargando fotos…
+      </div>
     </div>
   </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-cerrar" id="lbCerrar">✕</button>
+    <button class="lightbox-nav lightbox-prev" id="lbPrev">‹</button>
+    <div class="lightbox-img-wrap">
+      <img id="lbImg" src="" alt="Foto"/>
+    </div>
+    <button class="lightbox-nav lightbox-next" id="lbNext">›</button>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
 
   <footer class="footer">
     <p>Hecho con todo el amor del mundo 💖</p>
   </footer>
 
   <script src="script.js"></script>
+
+  <!-- Firebase SDK (módulos ESM via CDN) -->
+  <script type="module">
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot,
+             deleteDoc, doc, query, orderBy }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getStorage, ref, uploadBytesResumable,
+             getDownloadURL, deleteObject }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+    // ─────────────────────────────────────────────────────────
+    // CONFIGURACIÓN FIREBASE
+    // ─────────────────────────────────────────────────────────
+    const firebaseConfig = {
+      apiKey:            "AIzaSyCwtRsQ1Kf8Q_2UjzwIwRsUQ27PHVCjw7U",
+      authDomain:        "galeria-amor-b51d0.firebaseapp.com",
+      projectId:         "galeria-amor-b51d0",
+      storageBucket:     "galeria-amor-b51d0.firebasestorage.app",
+      messagingSenderId: "162488168460",
+      appId:             "1:162488168460:web:f17fb7a36ee1455021be29"
+    };
+
+    const app     = initializeApp(firebaseConfig);
+    const db      = getFirestore(app);
+    const storage = getStorage(app);
+    const COL     = "fotos";   // nombre de la colección en Firestore
+
+    // ─────────────────────────────────────────────────────────
+    // ELEMENTOS DOM
+    // ─────────────────────────────────────────────────────────
+    const inputFotos      = document.getElementById('inputFotos');
+    const uploadZone      = document.getElementById('uploadZone');
+    const masonryGrid     = document.getElementById('masonryGrid');
+    const galeriaVacia    = document.getElementById('galeriaVacia');
+    const galeriaControls = document.getElementById('galeriaControls');
+    const numFotos        = document.getElementById('numFotos');
+    const btnLimpiar      = document.getElementById('btnLimpiar');
+    const lightbox        = document.getElementById('lightbox');
+    const lbImg           = document.getElementById('lbImg');
+    const lbCerrar        = document.getElementById('lbCerrar');
+    const lbPrev          = document.getElementById('lbPrev');
+    const lbNext          = document.getElementById('lbNext');
+    const toastEl         = document.getElementById('toast');
+    const progressWrap    = document.getElementById('progressWrap');
+    const progressFill    = document.getElementById('progressFill');
+    const progressLabel   = document.getElementById('progressLabel');
+    const syncDot         = document.getElementById('syncDot');
+
+    // ─────────────────────────────────────────────────────────
+    // ESTADO LOCAL
+    // ─────────────────────────────────────────────────────────
+    let fotosCache = [];  // [{ firestoreId, storageRef, url, createdAt }]
+    let lbIndex    = 0;
+
+    // ─────────────────────────────────────────────────────────
+    // TOAST
+    // ─────────────────────────────────────────────────────────
+    let toastTimer;
+    function mostrarToast(msg) {
+      clearTimeout(toastTimer);
+      toastEl.textContent = msg;
+      toastEl.classList.add('visible');
+      toastTimer = setTimeout(() => toastEl.classList.remove('visible'), 2800);
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // INDICADOR DE SINCRONIZACIÓN
+    // ─────────────────────────────────────────────────────────
+    function setSyncing() {
+      syncDot.textContent = 'Sincronizando…';
+      syncDot.className   = 'sync-dot cargando';
+    }
+    function setSynced() {
+      syncDot.textContent = 'Sincronizado ✓';
+      syncDot.className   = 'sync-dot';
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // RENDERIZAR FOTO EN EL GRID
+    // ─────────────────────────────────────────────────────────
+    function renderItem(foto, idx, delay = 0) {
+      if (masonryGrid.querySelector(`[data-fid="${foto.firestoreId}"]`)) return;
+
+      const item = document.createElement('div');
+      item.classList.add('masonry-item');
+      item.dataset.fid = foto.firestoreId;
+      item.style.animationDelay = `${delay}ms`;
+
+      item.innerHTML = `
+        <img src="${foto.url}" alt="Foto ${idx + 1}" loading="lazy"/>
+        <div class="masonry-overlay">
+          <span class="overlay-num">💕 Foto ${idx + 1}</span>
+          <button class="overlay-del" title="Eliminar foto">🗑</button>
+        </div>
+      `;
+
+      item.querySelector('img').addEventListener('click', () => abrirLightbox(foto.firestoreId));
+      item.querySelector('img').addEventListener('touchend', (e) => {
+        e.preventDefault();
+        abrirLightbox(foto.firestoreId);
+      }, { passive: false });
+
+      item.querySelector('.overlay-del').addEventListener('click', (e) => {
+        e.stopPropagation();
+        eliminarFoto(foto.firestoreId, foto.storageRef);
+      });
+
+      masonryGrid.appendChild(item);
+    }
+
+    function renumerar() {
+      masonryGrid.querySelectorAll('.overlay-num').forEach((el, i) => {
+        el.textContent = `💕 Foto ${i + 1}`;
+      });
+    }
+
+    function actualizarContador() {
+      numFotos.textContent = fotosCache.length;
+      galeriaControls.style.display = fotosCache.length > 0 ? 'flex' : 'none';
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // ESCUCHAR CAMBIOS EN TIEMPO REAL (Firestore)
+    // Se dispara automáticamente en TODOS los dispositivos
+    // cuando alguien sube o borra una foto
+    // ─────────────────────────────────────────────────────────
+    const q = query(collection(db, COL), orderBy("createdAt", "asc"));
+
+    onSnapshot(q, (snapshot) => {
+      setSyncing();
+
+      snapshot.docChanges().forEach((change) => {
+        const data = change.doc.data();
+        const foto = {
+          firestoreId: change.doc.id,
+          storageRef:  data.storageRef,
+          url:         data.url,
+          createdAt:   data.createdAt
+        };
+
+        if (change.type === "added") {
+          if (!fotosCache.find(f => f.firestoreId === foto.firestoreId)) {
+            fotosCache.push(foto);
+            fotosCache.sort((a, b) => a.createdAt - b.createdAt);
+            const idx = fotosCache.findIndex(f => f.firestoreId === foto.firestoreId);
+            renderItem(foto, idx);
+          }
+        }
+
+        if (change.type === "removed") {
+          fotosCache = fotosCache.filter(f => f.firestoreId !== change.doc.id);
+          const el = masonryGrid.querySelector(`[data-fid="${change.doc.id}"]`);
+          if (el) {
+            el.style.transition = 'opacity 0.3s, transform 0.3s';
+            el.style.opacity    = '0';
+            el.style.transform  = 'scale(0.7)';
+            setTimeout(() => el.remove(), 320);
+          }
+        }
+      });
+
+      setTimeout(() => {
+        if (fotosCache.length === 0) {
+          galeriaVacia.innerHTML = '<span>💕</span>Aún no hay fotos…<br/>¡Sube los momentos más bonitos!';
+          galeriaVacia.style.display = 'block';
+          if (!masonryGrid.contains(galeriaVacia)) masonryGrid.appendChild(galeriaVacia);
+        } else {
+          galeriaVacia.style.display = 'none';
+        }
+        renumerar();
+        actualizarContador();
+        setSynced();
+      }, 300);
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // SUBIR FOTOS A FIREBASE STORAGE + FIRESTORE
+    // ─────────────────────────────────────────────────────────
+    async function subirFotos(archivos) {
+      const arr = Array.from(archivos).filter(f => f.type.startsWith('image/'));
+      if (!arr.length) return;
+
+      progressWrap.classList.add('visible');
+      let completadas = 0;
+
+      for (const file of arr) {
+        const nombreUnico = `fotos/${Date.now()}_${Math.random().toString(36).slice(2)}_${file.name}`;
+        const storageRef  = ref(storage, nombreUnico);
+        const uploadTask  = uploadBytesResumable(storageRef, file);
+
+        await new Promise((resolve, reject) => {
+          uploadTask.on('state_changed',
+            (snap) => {
+              const pct     = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+              const overall = Math.round(((completadas + pct / 100) / arr.length) * 100);
+              progressFill.style.width  = overall + '%';
+              progressLabel.textContent = `Subiendo foto ${completadas + 1} de ${arr.length}… ${pct}%`;
+            },
+            reject,
+            async () => {
+              const url = await getDownloadURL(uploadTask.snapshot.ref);
+              // Guardar en Firestore → dispara onSnapshot en todos los dispositivos al instante
+              await addDoc(collection(db, COL), {
+                url,
+                storageRef: nombreUnico,
+                createdAt:  Date.now()
+              });
+              completadas++;
+              resolve();
+            }
+          );
+        });
+      }
+
+      progressFill.style.width  = '100%';
+      progressLabel.textContent = '✅ ¡Listo!';
+      setTimeout(() => {
+        progressWrap.classList.remove('visible');
+        progressFill.style.width = '0%';
+      }, 1200);
+
+      mostrarToast(`💖 ${completadas} foto${completadas > 1 ? 's' : ''} subida${completadas > 1 ? 's' : ''}`);
+      inputFotos.value = '';
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // ELIMINAR FOTO
+    // ─────────────────────────────────────────────────────────
+    async function eliminarFoto(firestoreId, storageRefPath) {
+      try {
+        await deleteDoc(doc(db, COL, firestoreId));          // borra de Firestore
+        await deleteObject(ref(storage, storageRefPath));    // borra imagen de Storage
+        mostrarToast('🗑 Foto eliminada');
+      } catch (e) {
+        mostrarToast('❌ Error al eliminar');
+        console.error(e);
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // LIMPIAR TODA LA GALERÍA
+    // ─────────────────────────────────────────────────────────
+    btnLimpiar.addEventListener('click', async () => {
+      if (!confirm('¿Seguro que quieres borrar todas las fotos? Esta acción no se puede deshacer.')) return;
+      setSyncing();
+      await Promise.all(fotosCache.map(f => eliminarFoto(f.firestoreId, f.storageRef)));
+      mostrarToast('✨ Galería limpiada');
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // EVENTOS DE SUBIDA
+    // ─────────────────────────────────────────────────────────
+    inputFotos.addEventListener('change', () => subirFotos(inputFotos.files));
+
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('drag-over');
+    });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('drag-over');
+      subirFotos(e.dataTransfer.files);
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // LIGHTBOX
+    // ─────────────────────────────────────────────────────────
+    function abrirLightbox(firestoreId) {
+      lbIndex = fotosCache.findIndex(f => f.firestoreId === firestoreId);
+      if (lbIndex === -1) return;
+      lbImg.src = fotosCache[lbIndex].url;
+      lightbox.classList.add('activo');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarLightbox() {
+      lightbox.classList.remove('activo');
+      document.body.style.overflow = '';
+      setTimeout(() => { lbImg.src = ''; }, 400);
+    }
+
+    function navLightbox(dir) {
+      if (!fotosCache.length) return;
+      lbIndex = (lbIndex + dir + fotosCache.length) % fotosCache.length;
+      lbImg.style.opacity   = '0';
+      lbImg.style.transform = `translateX(${dir > 0 ? '30px' : '-30px'})`;
+      lbImg.style.transition = 'opacity 0.2s, transform 0.2s';
+      setTimeout(() => {
+        lbImg.src             = fotosCache[lbIndex].url;
+        lbImg.style.opacity   = '1';
+        lbImg.style.transform = 'translateX(0)';
+      }, 200);
+    }
+
+    lbCerrar.addEventListener('click', cerrarLightbox);
+    lbPrev.addEventListener('click',   () => navLightbox(-1));
+    lbNext.addEventListener('click',   () => navLightbox(1));
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) cerrarLightbox(); });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('activo')) return;
+      if (e.key === 'Escape')     cerrarLightbox();
+      if (e.key === 'ArrowLeft')  navLightbox(-1);
+      if (e.key === 'ArrowRight') navLightbox(1);
+    });
+
+    // Swipe móvil en lightbox
+    let lbTouchX = 0;
+    lightbox.addEventListener('touchstart', (e) => { lbTouchX = e.touches[0].clientX; }, { passive: true });
+    lightbox.addEventListener('touchend',   (e) => {
+      const dx = e.changedTouches[0].clientX - lbTouchX;
+      if (Math.abs(dx) > 50) navLightbox(dx < 0 ? 1 : -1);
+    }, { passive: true });
+  </script>
 </body>
 </html>
