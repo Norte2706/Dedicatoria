@@ -62,15 +62,23 @@ function actualizarContador() {
   const minutos         = Math.floor((segundosTotales % 3600) / 60);
   const segundos        = segundosTotales % 60;
 
-  document.getElementById('cAnios').textContent   = anios;
-  document.getElementById('cMeses').textContent   = meses;
-  document.getElementById('cDias').textContent    = dias;
-  document.getElementById('cHoras').textContent   = String(horas).padStart(2,'0');
-  document.getElementById('cMinutos').textContent = String(minutos).padStart(2,'0');
-  document.getElementById('cSegundos').textContent= String(segundos).padStart(2,'0');
+  const cAnios = document.getElementById('cAnios');
+  if (cAnios) cAnios.textContent = anios;
+  const cMeses = document.getElementById('cMeses');
+  if (cMeses) cMeses.textContent = meses;
+  const cDias = document.getElementById('cDias');
+  if (cDias) cDias.textContent = dias;
+  const cHoras = document.getElementById('cHoras');
+  if (cHoras) cHoras.textContent = String(horas).padStart(2,'0');
+  const cMinutos = document.getElementById('cMinutos');
+  if (cMinutos) cMinutos.textContent = String(minutos).padStart(2,'0');
+  const cSegundos = document.getElementById('cSegundos');
+  if (cSegundos) cSegundos.textContent = String(segundos).padStart(2,'0');
 }
-actualizarContador();
-setInterval(actualizarContador, 1000);
+if (document.getElementById('cAnios')) {
+  actualizarContador();
+  setInterval(actualizarContador, 1000);
+}
 
 // ============================================================
 // REVEAL AL SCROLL
@@ -90,22 +98,26 @@ reveals.forEach(el => observer.observe(el));
 // GALERÍA - EFECTO CORAZÓN
 // ============================================================
 const galeria = document.getElementById('galeria');
-galeria.addEventListener('mouseenter', () => galeria.classList.add('activo'));
-galeria.addEventListener('mouseleave', () => galeria.classList.remove('activo'));
+if (galeria) {
+  galeria.addEventListener('mouseenter', () => galeria.classList.add('activo'));
+  galeria.addEventListener('mouseleave', () => galeria.classList.remove('activo'));
+}
 
-document.querySelectorAll('.foto-card').forEach(card => {
-  card.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    galeria.classList.add('activo');
-    card.classList.add('tocado');
-  }, { passive: false });
-  card.addEventListener('touchend', () => {
-    setTimeout(() => {
-      galeria.classList.remove('activo');
-      card.classList.remove('tocado');
-    }, 1200);
+if (document.querySelectorAll('.foto-card').length > 0) {
+  document.querySelectorAll('.foto-card').forEach(card => {
+    card.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      galeria.classList.add('activo');
+      card.classList.add('tocado');
+    }, { passive: false });
+    card.addEventListener('touchend', () => {
+      setTimeout(() => {
+        galeria.classList.remove('activo');
+        card.classList.remove('tocado');
+      }, 1200);
+    });
   });
-});
+}
 
 // ============================================================
 // LLUVIA DE CORAZONES (Canvas)
@@ -172,8 +184,10 @@ function iniciarLluvia() {
   lluviaAnim = requestAnimationFrame(animarLluvia);
 }
 
-btnLluvia.addEventListener('click', iniciarLluvia);
-btnLluvia.addEventListener('touchstart', (e) => { e.preventDefault(); iniciarLluvia(); }, { passive: false });
+if (btnLluvia) {
+  btnLluvia.addEventListener('click', iniciarLluvia);
+  btnLluvia.addEventListener('touchstart', (e) => { e.preventDefault(); iniciarLluvia(); }, { passive: false });
+}
 
 // ============================================================
 // JUEGO - ATRAPA LOS CORAZONES
@@ -293,8 +307,10 @@ function terminarJuego() {
   juegoFin.classList.remove('hidden');
 }
 
-document.getElementById('btnJugar').addEventListener('click', iniciarJuego);
-document.getElementById('btnReiniciar').addEventListener('click', iniciarJuego);
+if (document.getElementById('btnJugar')) {
+  document.getElementById('btnJugar').addEventListener('click', iniciarJuego);
+  document.getElementById('btnReiniciar').addEventListener('click', iniciarJuego);
+}
 
 function abrirWhatsApp() {
   const numero  = '5217351619885'; // ← tu número aquí
