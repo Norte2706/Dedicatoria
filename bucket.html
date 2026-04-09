@@ -3,41 +3,801 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cosas por hacer — Para Ti 💖</title>
+  <title>Nuestro Juego — Para Ti 💖</title>
   <link rel="stylesheet" href="style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── JUEGO DE PREGUNTAS ── */
+    .juego-preguntas-section {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 20px 80px;
+      background: radial-gradient(ellipse at 50% 30%, #3d0030 0%, #110008 70%);
+      overflow: hidden;
+    }
+
+    /* Estrellas de fondo */
+    .estrellas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .estrella {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0;
+      animation: parpadear var(--dur, 3s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes parpadear {
+      0%, 100% { opacity: 0; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.5); }
+    }
+
+    /* Header */
+    .jp-header {
+      text-align: center;
+      margin-bottom: 50px;
+      animation: aparecer 1.2s ease both;
+    }
+    .jp-header .prox-emoji {
+      font-size: 4rem;
+      display: block;
+      margin-bottom: 16px;
+      animation: latir 1.5s ease-in-out infinite;
+    }
+    .jp-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: #f8a5c2;
+      margin-bottom: 10px;
+    }
+    .jp-subtitulo {
+      font-size: 0.9rem;
+      color: #c090a8;
+      letter-spacing: 0.12em;
+      max-width: 500px;
+      line-height: 1.7;
+    }
+
+    /* Progreso */
+    .jp-progreso-wrap {
+      width: 100%;
+      max-width: 560px;
+      margin-bottom: 36px;
+      animation: aparecer 1.4s ease both;
+    }
+    .jp-progreso-texto {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #9a6080;
+      margin-bottom: 8px;
+      letter-spacing: 0.1em;
+    }
+    .jp-progreso-barra {
+      height: 4px;
+      background: rgba(232,67,147,0.15);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .jp-progreso-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e84393, #f8a5c2);
+      border-radius: 99px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 12px rgba(232,67,147,0.5);
+    }
+
+    /* Categoría badge */
+    .jp-categoria {
+      display: inline-block;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cat-color, #e84393);
+      border: 1px solid var(--cat-color, #e84393);
+      padding: 4px 14px;
+      border-radius: 99px;
+      margin-bottom: 24px;
+      background: rgba(232,67,147,0.06);
+      transition: all 0.4s ease;
+    }
+
+    /* Carta principal */
+    .jp-carta-wrap {
+      perspective: 1200px;
+      width: 100%;
+      max-width: 560px;
+      min-height: 320px;
+      margin-bottom: 36px;
+    }
+    .jp-carta {
+      width: 100%;
+      min-height: 320px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 28px;
+    }
+    .jp-carta.volteada { transform: rotateY(180deg); }
+
+    .jp-carta-lado {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      text-align: center;
+    }
+
+    /* Frente - tapado */
+    .jp-carta-frente {
+      background: linear-gradient(135deg, rgba(232,67,147,0.12), rgba(180,0,80,0.18));
+      border: 1.5px solid rgba(232,67,147,0.3);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    }
+    .jp-carta-frente:hover {
+      border-color: rgba(232,67,147,0.6);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 40px rgba(232,67,147,0.2);
+      transform: translateY(-4px);
+    }
+    .jp-carta-frente .icono-grande {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      animation: flotar-icono 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(232,67,147,0.5));
+    }
+    @keyframes flotar-icono {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-10px) rotate(3deg); }
+    }
+    .jp-carta-frente .hint {
+      font-size: 0.85rem;
+      color: #9a6080;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .jp-carta-frente .hint span {
+      display: inline-block;
+      animation: pulsar 2s ease-in-out infinite;
+    }
+
+    /* Atrás - pregunta */
+    .jp-carta-atras {
+      background: linear-gradient(135deg, #2a0020, #1e000f);
+      border: 1.5px solid rgba(232,67,147,0.4);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 60px rgba(232,67,147,0.1);
+      transform: rotateY(180deg);
+    }
+
+    /* Para quién es */
+    .jp-para {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 99px;
+      margin-bottom: 28px;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+    }
+    .jp-para.ella {
+      color: #f8a5c2;
+      background: rgba(248,165,194,0.12);
+      border: 1px solid rgba(248,165,194,0.3);
+    }
+    .jp-para.el {
+      color: #93c5fd;
+      background: rgba(147,197,253,0.12);
+      border: 1px solid rgba(147,197,253,0.3);
+    }
+    .jp-para.ambos {
+      color: #fcd34d;
+      background: rgba(252,211,77,0.12);
+      border: 1px solid rgba(252,211,77,0.3);
+    }
+
+    .jp-pregunta {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.2rem, 3.5vw, 1.65rem);
+      font-style: italic;
+      color: #f0d0e0;
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+
+    .jp-nota {
+      font-size: 0.82rem;
+      color: #7a4060;
+      font-style: italic;
+      line-height: 1.6;
+      padding-top: 16px;
+      border-top: 1px solid rgba(232,67,147,0.15);
+      width: 100%;
+    }
+    .jp-nota strong { color: #c090a8; font-style: normal; }
+
+    /* Controles */
+    .jp-controles {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: aparecer 1.6s ease both;
+    }
+
+    .jp-btn {
+      border: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .jp-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
+
+    .jp-btn-voltear {
+      background: linear-gradient(135deg, #e84393, #b5005b);
+      color: white;
+      box-shadow: 0 4px 25px rgba(232,67,147,0.4);
+    }
+    .jp-btn-voltear:hover:not(:disabled) {
+      transform: scale(1.06);
+      box-shadow: 0 8px 40px rgba(232,67,147,0.55);
+    }
+
+    .jp-btn-siguiente {
+      background: rgba(232,67,147,0.1);
+      color: #f8a5c2;
+      border: 1.5px solid rgba(232,67,147,0.35);
+    }
+    .jp-btn-siguiente:hover:not(:disabled) {
+      background: rgba(232,67,147,0.18);
+      transform: scale(1.04);
+      border-color: rgba(232,67,147,0.6);
+    }
+
+    .jp-btn-reiniciar {
+      background: transparent;
+      color: #9a6080;
+      border: 1px solid rgba(150,80,100,0.3);
+      font-size: 0.85rem;
+      padding: 10px 22px;
+    }
+    .jp-btn-reiniciar:hover { color: #f8a5c2; border-color: rgba(232,67,147,0.4); }
+
+    /* Pantalla final */
+    .jp-final {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 560px;
+      animation: aparecer 1s ease both;
+    }
+    .jp-final.visible { display: flex; }
+    .jp-final-emoji { font-size: 5rem; margin-bottom: 20px; animation: latir 1.2s ease-in-out infinite; }
+    .jp-final-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: #f8a5c2;
+      margin-bottom: 16px;
+    }
+    .jp-final-mensaje {
+      font-size: 1.05rem;
+      color: #d0a0b8;
+      line-height: 1.9;
+      margin-bottom: 32px;
+      font-style: italic;
+      font-family: 'Playfair Display', serif;
+    }
+    .jp-final-mensaje strong { color: #f8a5c2; font-style: normal; }
+
+    /* Indicador de quién responde */
+    .jp-turno-hint {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 0.78rem;
+      color: #7a4060;
+      letter-spacing: 0.08em;
+    }
+    .jp-turno-hint span {
+      padding: 3px 10px;
+      border-radius: 99px;
+      background: rgba(232,67,147,0.07);
+      border: 1px solid rgba(232,67,147,0.15);
+    }
+
+    /* Partícula de celebración */
+    .celebracion {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9000;
+    }
+    .confeti {
+      position: absolute;
+      font-size: 1.8rem;
+      animation: caer 2s ease forwards;
+    }
+    @keyframes caer {
+      0% { transform: translateY(-20px) rotate(0deg) scale(0); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg) scale(1); opacity: 0; }
+    }
+
+    /* Número de carta decorativo */
+    .jp-num-carta {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      font-size: 0.75rem;
+      color: rgba(232,67,147,0.3);
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      .jp-carta-lado { padding: 36px 24px; }
+      .jp-pregunta { font-size: 1.15rem; }
+    }
+  </style>
 </head>
 <body>
   <div class="cursor" id="cursor">💗</div>
   <div class="particles" id="particles"></div>
+  <div class="estrellas" id="estrellas"></div>
 
   <nav class="navbar">
     <a href="index.html" class="nav-logo">💖 Mi Amor</a>
     <div class="nav-links" id="navLinks">
       <a href="index.html" class="nav-link">Inicio</a>
-      <a href="galeria.html" class="nav-link ">Galería 📸</a>
-      <a href="playlist.html" class="nav-link ">Playlist 🎵</a>
-      <a href="bucket.html" class="nav-link activo">Cosas por hacer 🗺️</a>
+      <a href="galeria.html" class="nav-link">Galería 📸</a>
+      <a href="playlist.html" class="nav-link">Playlist 🎵</a>
+      <a href="bucket.html" class="nav-link activo">Nuestro Juego 🎴</a>
     </div>
     <button class="nav-menu" id="navMenu">☰</button>
   </nav>
 
-  <section class="proximamente-section">
-    <div class="prox-content">
-      <div class="prox-emoji">🗺️</div>
-      <h1 class="prox-titulo">Cosas por hacer</h1>
-      <p class="prox-sub">Próximamente...</p>
-      <p class="prox-mensaje">Estoy preparando algo muy especial para ti <br/>Vuelve pronto, amor.</p>
-      <div class="prox-corazones">
+  <section class="juego-preguntas-section">
+
+    <!-- HEADER -->
+    <div class="jp-header" id="jpHeader">
+      <span class="prox-emoji">🎴</span>
+      <h1 class="jp-titulo">Nuestro Juego Secreto</h1>
+      <p class="jp-subtitulo">Preguntas para conocernos de verdad — sin filtros, sin miedo.<br/>Túrnense para responder cada carta con honestidad 💖</p>
+    </div>
+
+    <!-- LEYENDA -->
+    <div class="jp-turno-hint" id="jpLeyenda">
+      <span>💕 Para ella</span>
+      <span>💙 Para él</span>
+      <span>✨ Para los dos</span>
+    </div>
+
+    <!-- PROGRESO -->
+    <div class="jp-progreso-wrap" id="jpProgresoWrap">
+      <div class="jp-progreso-texto">
+        <span id="jpNumActual">Carta 1 de 20</span>
+        <span id="jpPorcentaje">0%</span>
       </div>
+      <div class="jp-progreso-barra">
+        <div class="jp-progreso-fill" id="jpProgressFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- CATEGORÍA -->
+    <div class="jp-categoria" id="jpCategoria">💫 Para comenzar</div>
+
+    <!-- CARTA -->
+    <div class="jp-carta-wrap" id="jpCartaWrap">
+      <div class="jp-carta" id="jpCarta">
+        <!-- Frente -->
+        <div class="jp-carta-lado jp-carta-frente" id="jpFrente" onclick="voltearCarta()">
+          <div class="icono-grande" id="jpIconoFrente">🎴</div>
+          <p class="hint"><span>Toca para revelar la pregunta</span></p>
+          <span class="jp-num-carta" id="jpNumDecorativo">01</span>
+        </div>
+        <!-- Atrás -->
+        <div class="jp-carta-lado jp-carta-atras" id="jpAtras">
+          <div class="jp-para ella" id="jpParaTag">💕 Para ella</div>
+          <p class="jp-pregunta" id="jpPreguntaTexto">¿Cuál fue el momento exacto en que sentiste algo por mí?</p>
+          <div class="jp-nota" id="jpNotaTexto"></div>
+          <span class="jp-num-carta" id="jpNumDecorativoAtras">01</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROLES -->
+    <div class="jp-controles" id="jpControles">
+      <button class="jp-btn jp-btn-voltear" id="jpBtnVoltear" onclick="voltearCarta()">
+        ✨ Revelar pregunta
+      </button>
+      <button class="jp-btn jp-btn-siguiente" id="jpBtnSiguiente" onclick="siguienteCarta()" disabled>
+        Siguiente carta →
+      </button>
+    </div>
+    <div style="margin-top:16px;">
+      <button class="jp-btn jp-btn-reiniciar" onclick="reiniciarJuego()">🔄 Empezar de nuevo</button>
+    </div>
+
+    <!-- PANTALLA FINAL -->
+    <div class="jp-final" id="jpFinal">
+      <div class="jp-final-emoji">💖</div>
+      <h2 class="jp-final-titulo">Lo lograron, amor</h2>
+      <p class="jp-final-mensaje">
+        Respondieron todas las preguntas juntos.<br/>
+        Eso dice mucho de los dos.<br/><br/>
+        <strong>Mariana</strong>, espero que este juego te haya ayudado a decir cosas que a veces es difícil decir en voz alta.<br/><br/>
+        Yo siempre voy a estar aquí para escucharte, para conocerte más cada día, y para recordarte que lo que sientes importa — siempre.<br/><br/>
+        <strong>Te amo. Hoy, mañana y siempre. 💖</strong>
+      </p>
+      <button class="jp-btn jp-btn-voltear" onclick="reiniciarJuego()" style="margin-bottom:16px;">
+        🔄 Jugar otra vez
+      </button>
       <a href="index.html" class="prox-btn">← Volver al inicio</a>
     </div>
+
   </section>
 
   <footer class="footer">
     <p>Hecho con todo el amor del mundo 💖</p>
   </footer>
 
+  <div class="celebracion" id="celebracion"></div>
+
   <script src="script.js"></script>
+  <script>
+    // ══════════════════════════════════════════════════════
+    // PREGUNTAS DEL JUEGO
+    // ══════════════════════════════════════════════════════
+    const preguntas = [
+      {
+        para: "ella",
+        tag: "💕 Para ella",
+        categoria: "💫 Para comenzar",
+        emoji: "🌹",
+        pregunta: "¿Cuál fue el momento exacto en que sentiste algo especial por mí?",
+        nota: "Cuéntame con detalle. No hay respuesta incorrecta, solo la tuya."
+      },
+      {
+        para: "el",
+        tag: "💙 Para él",
+        categoria: "💫 Para comenzar",
+        emoji: "💙",
+        pregunta: "¿Qué fue lo primero que me noté de ti que me llamó la atención?",
+        nota: "La verdad, sin filtros."
+      },
+      {
+        para: "ambos",
+        tag: "✨ Para los dos",
+        categoria: "🔥 Un poco más profundo",
+        emoji: "✨",
+        pregunta: "¿Qué es algo que desearías que el otro supiera pero te da miedo decir?",
+        nota: "Este es el momento. Es un espacio seguro, los dos están aquí."
+      },
+      {
+        para: "ella",
+        tag: "💕 Para ella",
+        categoria: "🔥 Un poco más profundo",
+        emoji: "🦋",
+        pregunta: "¿Qué es lo que más te gusta de cómo te trato?",
+        nota: "Quiero saber qué cosas de mí te hacen sentir bien de verdad."
+      },
+      {
+        para: "ella",
+        tag: "💕 Para ella",
+        categoria: "🔥 Un poco más profundo",
+        emoji: "🌙",
+        pregunta: "¿Hay algo que yo haga que a veces te molesta pero no me has dicho?",
+        nota: "No te preocupes, no me voy a enojar. Necesito saberlo para ser mejor."
+      },
+      {
+        para: "el",
+        tag: "💙 Para él",
+        categoria: "🔥 Un poco más profundo",
+        emoji: "💫",
+        pregunta: "¿Qué es lo que más me asusta de esta relación?",
+        nota: "Siendo honesto conmigo mismo y contigo."
+      },
+      {
+        para: "ambos",
+        tag: "✨ Para los dos",
+        categoria: "🌟 Sueños juntos",
+        emoji: "🌅",
+        pregunta: "Si pudiéramos ir a cualquier lugar del mundo juntos ahora mismo, ¿a dónde iríamos?",
+        nota: "Cuéntenlo con detalle. ¿Qué harían ahí?"
+      },
+      {
+        para: "ella",
+        tag: "💕 Para ella",
+        categoria: "🌟 Sueños juntos",
+        emoji: "💭",
+        pregunta: "¿Cómo te imaginas que será nuestra vida en 5 años?",
+        nota: "El sueño que tienes cuando piensas en nosotros."
+      },
+      {
+        para: "ella",
+        tag: "💕 Para ella",
+        categoria: "❤ Lo más íntimo",
+        emoji: "🤍",
+        pregunta: "¿Cuándo fue la última vez que te sentiste realmente comprendida por mí?",
+        nota: "Y si hay momentos en que no te has sentido así, también quiero saberlo."
+      },
+      {
+        para: "ambos",
+        tag: "✨ Para los dos",
+        categoria: "❤ Lo más íntimo",
+        emoji: "🔮",
+        pregunta: "¿Qué es algo que nunca le habías contado a nadie y hoy podrías compartir aquí?",
+        nota: "No tienen que si no quieren. Pero si se animan, este es el lugar."
+      },
+      {
+        para: "el",
+        tag: "💙 Para él",
+        categoria: "❤ Lo más íntimo",
+        emoji: "💪",
+        pregunta: "¿En qué momentos siento que no soy suficiente para ti y cómo lo manejo?",
+        nota: "La vulnerabilidad también es valentía."
+      },
+      {
+        para: "ella",
+        tag: "💕 Para ella",
+        categoria: "❤ Lo más íntimo",
+        emoji: "🌺",
+        pregunta: "¿Qué necesitas de mí que sientes que a veces te falta?",
+        nota: "Esto es importante. Quiero darte lo que necesitas."
+      },
+      {
+        para: "ambos",
+        tag: "✨ Para los dos",
+        categoria: "😂 Un respiro",
+        emoji: "😂",
+        pregunta: "¿Cuál ha sido el momento más vergonzoso que han vivido juntos?",
+        nota: "¡Toca reírse! Quien se ría primero pierde 😄"
+      },
+      {
+        para: "ella",
+        tag: "💕 Para ella",
+        categoria: "😂 Un respiro",
+        emoji: "🎭",
+        pregunta: "¿Qué canción me cantarías si tuvieras que hacerlo ahora mismo?",
+        nota: "Y tiene que cantarla. Sin excusas 🎤"
+      },
+      {
+        para: "ambos",
+        tag: "✨ Para los dos",
+        categoria: "🌟 Sueños juntos",
+        emoji: "🏠",
+        pregunta: "¿Cómo sería el día perfecto que pudiéramos pasar juntos?",
+        nota: "Descríbelo desde que se despiertan hasta que se duermen."
+      },
+      {
+        para: "ella",
+        tag: "💕 Para ella",
+        categoria: "❤ Lo más íntimo",
+        emoji: "💌",
+        pregunta: "¿Hay algo que hayas querido decirme y nunca encontraste el momento?",
+        nota: "Este es el momento. Estoy aquí y te escucho."
+      },
+      {
+        para: "el",
+        tag: "💙 Para él",
+        categoria: "❤ Lo más íntimo",
+        emoji: "🙏",
+        pregunta: "¿Por qué elegí quedarme y seguir eligiéndote cada día?",
+        nota: "Más allá de lo obvio. La razón de verdad."
+      },
+      {
+        para: "ambos",
+        tag: "✨ Para los dos",
+        categoria: "🔥 Un poco más profundo",
+        emoji: "⚡",
+        pregunta: "¿Qué es algo que admiran del otro que nunca le han dicho directamente?",
+        nota: "Díganlo en voz alta. Ahora. Sin resumirlo."
+      },
+      {
+        para: "ella",
+        tag: "💕 Para ella",
+        categoria: "❤ Lo más íntimo",
+        emoji: "🌙",
+        pregunta: "¿Qué es lo que más valoras de tener a alguien como yo en tu vida?",
+        nota: "No hay prisa. Piénsalo de verdad."
+      },
+      {
+        para: "ambos",
+        tag: "✨ Para los dos",
+        categoria: "💖 La última",
+        emoji: "💖",
+        pregunta: "¿Qué promesa pequeña pueden hacerse hoy, aquí, los dos juntos?",
+        nota: "No tiene que ser enorme. Que sea real, que sea de corazón."
+      },
+    ];
+
+    // ══════════════════════════════════════════════════════
+    // ESTADO
+    // ══════════════════════════════════════════════════════
+    let indiceActual = 0;
+    let revelada = false;
+
+    const carta        = document.getElementById('jpCarta');
+    const btnVoltear   = document.getElementById('jpBtnVoltear');
+    const btnSiguiente = document.getElementById('jpBtnSiguiente');
+    const jpHeader     = document.getElementById('jpHeader');
+    const jpLeyenda    = document.getElementById('jpLeyenda');
+    const jpProgresoWrap = document.getElementById('jpProgresoWrap');
+    const jpFinal      = document.getElementById('jpFinal');
+    const jpCartaWrap  = document.getElementById('jpCartaWrap');
+    const jpControles  = document.getElementById('jpControles');
+    const jpCategoria  = document.getElementById('jpCategoria');
+
+    // Colores por categoría
+    const catColores = {
+      "💫 Para comenzar":  "#f8a5c2",
+      "🔥 Un poco más profundo": "#f97316",
+      "🌟 Sueños juntos":  "#fcd34d",
+      "❤ Lo más íntimo":  "#e84393",
+      "😂 Un respiro":     "#86efac",
+      "💖 La última":      "#f8a5c2",
+    };
+
+    function cargarPregunta(idx) {
+      const p = preguntas[idx];
+      revelada = false;
+
+      // Resetear carta
+      carta.classList.remove('volteada');
+
+      // Frente
+      document.getElementById('jpIconoFrente').textContent = p.emoji;
+      document.getElementById('jpNumDecorativo').textContent = String(idx + 1).padStart(2, '0');
+
+      // Atrás
+      const paraTag = document.getElementById('jpParaTag');
+      paraTag.textContent = p.tag;
+      paraTag.className = 'jp-para ' + p.para;
+      document.getElementById('jpPreguntaTexto').textContent = p.pregunta;
+      document.getElementById('jpNotaTexto').innerHTML = p.nota ? `<strong>💭</strong> ${p.nota}` : '';
+      document.getElementById('jpNumDecorativoAtras').textContent = String(idx + 1).padStart(2, '0');
+
+      // Categoría
+      jpCategoria.textContent = p.categoria;
+      const color = catColores[p.categoria] || '#e84393';
+      jpCategoria.style.setProperty('--cat-color', color);
+
+      // Progreso
+      const pct = Math.round((idx / preguntas.length) * 100);
+      document.getElementById('jpProgressFill').style.width = pct + '%';
+      document.getElementById('jpNumActual').textContent = `Carta ${idx + 1} de ${preguntas.length}`;
+      document.getElementById('jpPorcentaje').textContent = pct + '%';
+
+      // Botones
+      btnVoltear.disabled = false;
+      btnVoltear.textContent = '✨ Revelar pregunta';
+      btnSiguiente.disabled = true;
+    }
+
+    function voltearCarta() {
+      if (revelada) return;
+      revelada = true;
+      carta.classList.add('volteada');
+      btnVoltear.disabled = true;
+      btnVoltear.textContent = '✅ Pregunta revelada';
+      btnSiguiente.disabled = false;
+      lanzarConfeti(5);
+    }
+
+    function siguienteCarta() {
+      if (!revelada) return;
+      indiceActual++;
+
+      if (indiceActual >= preguntas.length) {
+        mostrarFinal();
+        return;
+      }
+
+      // Animación de salida
+      carta.style.opacity = '0';
+      carta.style.transform = 'translateX(60px) scale(0.95)';
+      carta.style.transition = 'opacity 0.35s, transform 0.35s';
+
+      setTimeout(() => {
+        cargarPregunta(indiceActual);
+        carta.style.transform = 'translateX(-40px) scale(0.95)';
+        setTimeout(() => {
+          carta.style.opacity = '1';
+          carta.style.transform = '';
+          carta.style.transition = 'opacity 0.4s, transform 0.4s, rotateY 0.7s cubic-bezier(0.4,0,0.2,1)';
+        }, 50);
+      }, 350);
+    }
+
+    function mostrarFinal() {
+      jpHeader.style.display = 'none';
+      jpLeyenda.style.display = 'none';
+      jpProgresoWrap.style.display = 'none';
+      jpCategoria.style.display = 'none';
+      jpCartaWrap.style.display = 'none';
+      jpControles.style.display = 'none';
+      document.querySelector('.jp-btn-reiniciar').style.display = 'none';
+      jpFinal.classList.add('visible');
+      lanzarConfeti(30);
+    }
+
+    function reiniciarJuego() {
+      indiceActual = 0;
+      jpHeader.style.display = '';
+      jpLeyenda.style.display = '';
+      jpProgresoWrap.style.display = '';
+      jpCategoria.style.display = '';
+      jpCartaWrap.style.display = '';
+      jpControles.style.display = '';
+      document.querySelector('.jp-btn-reiniciar').style.display = '';
+      jpFinal.classList.remove('visible');
+      carta.style.opacity = '1';
+      carta.style.transform = '';
+      carta.style.transition = '';
+      cargarPregunta(0);
+    }
+
+    function lanzarConfeti(cantidad) {
+      const cont = document.getElementById('celebracion');
+      const emojis = ['💖','💗','✨','🌹','💕','💝','🌟','❤'];
+      for (let i = 0; i < cantidad; i++) {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          el.className = 'confeti';
+          el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          el.style.left = Math.random() * 100 + 'vw';
+          el.style.top = '-30px';
+          el.style.fontSize = (1.2 + Math.random() * 1.5) + 'rem';
+          el.style.animationDuration = (1.5 + Math.random()) + 's';
+          el.style.animationDelay = (Math.random() * 0.5) + 's';
+          cont.appendChild(el);
+          setTimeout(() => el.remove(), 3000);
+        }, i * 80);
+      }
+    }
+
+    // Estrellas de fondo
+    const contenedorEstrellas = document.getElementById('estrellas');
+    for (let i = 0; i < 80; i++) {
+      const s = document.createElement('div');
+      s.className = 'estrella';
+      s.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+      s.style.setProperty('--delay', (Math.random() * 5) + 's');
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top  = Math.random() * 100 + '%';
+      const size = 1 + Math.random() * 2.5;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      contenedorEstrellas.appendChild(s);
+    }
+
+    // Iniciar
+    cargarPregunta(0);
+  </script>
 </body>
 </html>
