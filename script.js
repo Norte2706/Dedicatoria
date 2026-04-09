@@ -15,8 +15,25 @@ document.addEventListener('mousemove', (e) => {
 document.addEventListener('mousedown', () => cursor.style.transform = 'translate(-50%,-50%) scale(1.5)');
 document.addEventListener('mouseup',   () => cursor.style.transform = 'translate(-50%,-50%) scale(1)');
 
+// ============================================================// MENÚ MÓVIL - MOVER AL PRINCIPIO PARA EVITAR ERRORES
 // ============================================================
-// PARTÍCULAS FLOTANTES
+const navMenu  = document.getElementById('navMenu');
+const navLinks = document.getElementById('navLinks');
+if (navMenu && navLinks) {
+  navMenu.addEventListener('click', () => {
+    navLinks.classList.toggle('abierto');
+    navMenu.textContent = navLinks.classList.contains('abierto') ? '✕' : '☰';
+  });
+  // Cerrar al dar clic en un link
+  navLinks.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('abierto');
+      navMenu.textContent = '☰';
+    });
+  });
+}
+
+// ============================================================// PARTÍCULAS FLOTANTES
 // ============================================================
 const contenedorParticulas = document.getElementById('particles');
 for (let i = 0; i < 35; i++) {
@@ -124,7 +141,10 @@ if (document.querySelectorAll('.foto-card').length > 0) {
 // ============================================================
 const btnLluvia  = document.getElementById('btnLluvia');
 const canvas     = document.getElementById('lluviaCanvas');
-const ctx        = canvas.getContext('2d');
+let ctx;
+if (canvas) {
+  ctx = canvas.getContext('2d');
+}
 let lluviaActiva = false;
 let lluviaFrames = [];
 let lluviaAnim;
@@ -334,18 +354,3 @@ function abrirWhatsApp() {
   }
 }
 /////////////////////////////////////
-const navMenu  = document.getElementById('navMenu');
-const navLinks = document.getElementById('navLinks');
-if (navMenu && navLinks) {
-  navMenu.addEventListener('click', () => {
-    navLinks.classList.toggle('abierto');
-    navMenu.textContent = navLinks.classList.contains('abierto') ? '✕' : '☰';
-  });
-  // Cerrar al dar clic en un link
-  navLinks.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('abierto');
-      navMenu.textContent = '☰';
-    });
-  });
-}
