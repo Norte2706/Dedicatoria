@@ -21,7 +21,6 @@
       overflow: hidden;
     }
 
-    /* Estrellas de fondo */
     .estrellas {
       position: fixed;
       inset: 0;
@@ -44,7 +43,6 @@
       50% { opacity: 0.7; transform: scale(1.5); }
     }
 
-    /* Header */
     .jp-header {
       text-align: center;
       margin-bottom: 50px;
@@ -70,7 +68,6 @@
       line-height: 1.7;
     }
 
-    /* Progreso */
     .jp-progreso-wrap {
       width: 100%;
       max-width: 560px;
@@ -99,7 +96,6 @@
       box-shadow: 0 0 12px rgba(232,67,147,0.5);
     }
 
-    /* Categoría badge */
     .jp-categoria {
       display: inline-block;
       font-size: 0.75rem;
@@ -114,7 +110,6 @@
       transition: all 0.4s ease;
     }
 
-    /* Carta principal */
     .jp-carta-wrap {
       perspective: 1200px;
       width: 100%;
@@ -145,7 +140,6 @@
       text-align: center;
     }
 
-    /* Frente - tapado */
     .jp-carta-frente {
       background: linear-gradient(135deg, rgba(232,67,147,0.12), rgba(180,0,80,0.18));
       border: 1.5px solid rgba(232,67,147,0.3);
@@ -179,7 +173,6 @@
       animation: pulsar 2s ease-in-out infinite;
     }
 
-    /* Atrás - pregunta */
     .jp-carta-atras {
       background: linear-gradient(135deg, #2a0020, #1e000f);
       border: 1.5px solid rgba(232,67,147,0.4);
@@ -187,7 +180,6 @@
       transform: rotateY(180deg);
     }
 
-    /* Para quién es */
     .jp-para {
       font-size: 0.75rem;
       letter-spacing: 0.2em;
@@ -234,7 +226,6 @@
     }
     .jp-nota strong { color: #c090a8; font-style: normal; }
 
-    /* Controles */
     .jp-controles {
       display: flex;
       gap: 16px;
@@ -287,7 +278,6 @@
     }
     .jp-btn-reiniciar:hover { color: #f8a5c2; border-color: rgba(232,67,147,0.4); }
 
-    /* Pantalla final */
     .jp-final {
       display: none;
       flex-direction: column;
@@ -314,7 +304,6 @@
     }
     .jp-final-mensaje strong { color: #f8a5c2; font-style: normal; }
 
-    /* Indicador de quién responde */
     .jp-turno-hint {
       display: flex;
       gap: 8px;
@@ -331,7 +320,6 @@
       border: 1px solid rgba(232,67,147,0.15);
     }
 
-    /* Partícula de celebración */
     .celebracion {
       position: fixed;
       inset: 0;
@@ -348,7 +336,6 @@
       100% { transform: translateY(100vh) rotate(720deg) scale(1); opacity: 0; }
     }
 
-    /* Número de carta decorativo */
     .jp-num-carta {
       position: absolute;
       top: 20px;
@@ -383,21 +370,18 @@
 
   <section class="juego-preguntas-section">
 
-    <!-- HEADER -->
     <div class="jp-header" id="jpHeader">
       <span class="prox-emoji">🎴</span>
       <h1 class="jp-titulo">Nuestro Juego Secreto</h1>
       <p class="jp-subtitulo">Preguntas para conocernos de verdad — sin filtros, sin miedo.<br/>Túrnense para responder cada carta con honestidad 💖</p>
     </div>
 
-    <!-- LEYENDA -->
     <div class="jp-turno-hint" id="jpLeyenda">
       <span>💕 Para ella</span>
       <span>💙 Para él</span>
       <span>✨ Para los dos</span>
     </div>
 
-    <!-- PROGRESO -->
     <div class="jp-progreso-wrap" id="jpProgresoWrap">
       <div class="jp-progreso-texto">
         <span id="jpNumActual">Carta 1 de 20</span>
@@ -408,29 +392,24 @@
       </div>
     </div>
 
-    <!-- CATEGORÍA -->
     <div class="jp-categoria" id="jpCategoria">💫 Para comenzar</div>
 
-    <!-- CARTA -->
     <div class="jp-carta-wrap" id="jpCartaWrap">
       <div class="jp-carta" id="jpCarta">
-        <!-- Frente -->
         <div class="jp-carta-lado jp-carta-frente" id="jpFrente" onclick="voltearCarta()">
           <div class="icono-grande" id="jpIconoFrente">🎴</div>
           <p class="hint"><span>Toca para revelar la pregunta</span></p>
           <span class="jp-num-carta" id="jpNumDecorativo">01</span>
         </div>
-        <!-- Atrás -->
         <div class="jp-carta-lado jp-carta-atras" id="jpAtras">
           <div class="jp-para ella" id="jpParaTag">💕 Para ella</div>
-          <p class="jp-pregunta" id="jpPreguntaTexto">¿Cuál fue el momento exacto en que sentiste algo por mí?</p>
+          <p class="jp-pregunta" id="jpPreguntaTexto"></p>
           <div class="jp-nota" id="jpNotaTexto"></div>
           <span class="jp-num-carta" id="jpNumDecorativoAtras">01</span>
         </div>
       </div>
     </div>
 
-    <!-- CONTROLES -->
     <div class="jp-controles" id="jpControles">
       <button class="jp-btn jp-btn-voltear" id="jpBtnVoltear" onclick="voltearCarta()">
         ✨ Revelar pregunta
@@ -443,7 +422,6 @@
       <button class="jp-btn jp-btn-reiniciar" onclick="reiniciarJuego()">🔄 Empezar de nuevo</button>
     </div>
 
-    <!-- PANTALLA FINAL -->
     <div class="jp-final" id="jpFinal">
       <div class="jp-final-emoji">💖</div>
       <h2 class="jp-final-titulo">Lo lograron, amor</h2>
@@ -470,175 +448,189 @@
 
   <script src="script.js"></script>
   <script>
-    // ══════════════════════════════════════════════════════
-    // PREGUNTAS DEL JUEGO
-    // ══════════════════════════════════════════════════════
     const preguntas = [
+      // 1 — ella
       {
         para: "ella",
         tag: "💕 Para ella",
         categoria: "💫 Para comenzar",
         emoji: "🌹",
-        pregunta: "¿Cuál fue el momento exacto en que sentiste algo especial por mí?",
-        nota: "Cuéntame con detalle. No hay respuesta incorrecta, solo la tuya."
+        pregunta: "¿Hay una canción que escuchas y automáticamente me recuerda a mí? ¿Por qué esa?",
+        nota: "Cuéntame qué parte de la letra o la melodía te hace pensar en nosotros."
       },
+      // 2 — el
       {
         para: "el",
         tag: "💙 Para él",
         categoria: "💫 Para comenzar",
         emoji: "💙",
-        pregunta: "¿Qué fue lo primero que me noté de ti que me llamó la atención?",
-        nota: "La verdad, sin filtros."
+        pregunta: "¿En qué momento me doy cuenta de que realmente te conozco y no solo te quiero?",
+        nota: "Piénsalo con calma. Hay una diferencia entre amar a alguien y verdaderamente conocerlo."
       },
+      // 3 — ambos
       {
         para: "ambos",
         tag: "✨ Para los dos",
         categoria: "🔥 Un poco más profundo",
         emoji: "✨",
-        pregunta: "¿Qué es algo que desearías que el otro supiera pero te da miedo decir?",
-        nota: "Este es el momento. Es un espacio seguro, los dos están aquí."
+        pregunta: "¿Qué hábito o costumbre del otro los hace sentir más en casa?",
+        nota: "Esas cosas pequeñas que a veces no se dicen pero se sienten mucho."
       },
+      // 4 — ella
       {
         para: "ella",
         tag: "💕 Para ella",
         categoria: "🔥 Un poco más profundo",
         emoji: "🦋",
-        pregunta: "¿Qué es lo que más te gusta de cómo te trato?",
-        nota: "Quiero saber qué cosas de mí te hacen sentir bien de verdad."
+        pregunta: "¿Cuándo fue la última vez que sentiste que yo te vi de verdad, sin que tuvieras que explicarte?",
+        nota: "Si hay momentos en que no ha pasado, también quiero escucharlos."
       },
+      // 5 — ella
       {
         para: "ella",
         tag: "💕 Para ella",
         categoria: "🔥 Un poco más profundo",
         emoji: "🌙",
-        pregunta: "¿Hay algo que yo haga que a veces te molesta pero no me has dicho?",
-        nota: "No te preocupes, no me voy a enojar. Necesito saberlo para ser mejor."
+        pregunta: "¿Qué versión de ti misma sientes que puedes ser conmigo que con nadie más?",
+        nota: "No hay respuesta incorrecta. Solo la verdad de cómo te sientes."
       },
+      // 6 — el
       {
         para: "el",
         tag: "💙 Para él",
         categoria: "🔥 Un poco más profundo",
         emoji: "💫",
-        pregunta: "¿Qué es lo que más me asusta de esta relación?",
-        nota: "Siendo honesto conmigo mismo y contigo."
+        pregunta: "¿Qué parte de mí mismo he descubierto desde que estoy contigo?",
+        nota: "Las relaciones nos cambian. ¿Qué ha cambiado en mí para bien?"
       },
+      // 7 — ambos
       {
         para: "ambos",
         tag: "✨ Para los dos",
         categoria: "🌟 Sueños juntos",
         emoji: "🌅",
-        pregunta: "Si pudiéramos ir a cualquier lugar del mundo juntos ahora mismo, ¿a dónde iríamos?",
-        nota: "Cuéntenlo con detalle. ¿Qué harían ahí?"
+        pregunta: "¿Qué experiencia o aventura quieren vivir juntos antes de que termine el año?",
+        nota: "Puede ser grande o pequeña. Que sea real y que las dos personas quieran de verdad."
       },
+      // 8 — ella
       {
         para: "ella",
         tag: "💕 Para ella",
         categoria: "🌟 Sueños juntos",
         emoji: "💭",
-        pregunta: "¿Cómo te imaginas que será nuestra vida en 5 años?",
-        nota: "El sueño que tienes cuando piensas en nosotros."
+        pregunta: "Si pudieras cambiar una sola cosa de cómo llevamos esta relación, ¿qué sería?",
+        nota: "No tengas miedo de decirlo. Estoy aquí para escucharte, no para defenderme."
       },
+      // 9 — ella
       {
         para: "ella",
         tag: "💕 Para ella",
         categoria: "❤ Lo más íntimo",
         emoji: "🤍",
-        pregunta: "¿Cuándo fue la última vez que te sentiste realmente comprendida por mí?",
-        nota: "Y si hay momentos en que no te has sentido así, también quiero saberlo."
+        pregunta: "¿Qué necesitas de mí cuando estás pasando por algo difícil pero no sabes cómo pedirlo?",
+        nota: "Ayúdame a entenderte mejor para estar ahí de la manera que realmente necesitas."
       },
+      // 10 — ambos
       {
         para: "ambos",
         tag: "✨ Para los dos",
         categoria: "❤ Lo más íntimo",
         emoji: "🔮",
-        pregunta: "¿Qué es algo que nunca le habías contado a nadie y hoy podrías compartir aquí?",
-        nota: "No tienen que si no quieren. Pero si se animan, este es el lugar."
+        pregunta: "¿Hay algo que ambos saben pero ninguno ha dicho en voz alta todavía?",
+        nota: "Si se animan, este es el espacio. Sin juicios, solo los dos."
       },
+      // 11 — el
       {
         para: "el",
         tag: "💙 Para él",
         categoria: "❤ Lo más íntimo",
         emoji: "💪",
-        pregunta: "¿En qué momentos siento que no soy suficiente para ti y cómo lo manejo?",
-        nota: "La vulnerabilidad también es valentía."
+        pregunta: "¿Qué es lo que más me cuesta mostrarme vulnerable contigo y por qué?",
+        nota: "No tiene que ser fácil de decir. Por eso vale la pena decirlo."
       },
+      // 12 — ella
       {
         para: "ella",
         tag: "💕 Para ella",
         categoria: "❤ Lo más íntimo",
         emoji: "🌺",
-        pregunta: "¿Qué necesitas de mí que sientes que a veces te falta?",
-        nota: "Esto es importante. Quiero darte lo que necesitas."
+        pregunta: "¿Qué forma de amor sientes que más te llena: palabras, tiempo, detalles, contacto o ayuda?",
+        nota: "Y cuéntame un ejemplo concreto de cuando lo sentiste de verdad."
       },
+      // 13 — ambos
       {
         para: "ambos",
         tag: "✨ Para los dos",
         categoria: "😂 Un respiro",
         emoji: "😂",
-        pregunta: "¿Cuál ha sido el momento más vergonzoso que han vivido juntos?",
-        nota: "¡Toca reírse! Quien se ría primero pierde 😄"
+        pregunta: "¿Cuál es la mentira más tonta que se han dicho el uno al otro sin razón?",
+        nota: "Las tonterías de pareja también merecen un espacio. ¡A confesar! 😄"
       },
+      // 14 — ella
       {
         para: "ella",
         tag: "💕 Para ella",
         categoria: "😂 Un respiro",
         emoji: "🎭",
-        pregunta: "¿Qué canción me cantarías si tuvieras que hacerlo ahora mismo?",
-        nota: "Y tiene que cantarla. Sin excusas 🎤"
+        pregunta: "Si tuvieras que describir nuestra relación como un platillo de comida, ¿cuál sería y por qué?",
+        nota: "Sé creativa. Y luego él hace lo mismo 🍜"
       },
+      // 15 — ambos
       {
         para: "ambos",
         tag: "✨ Para los dos",
         categoria: "🌟 Sueños juntos",
         emoji: "🏠",
-        pregunta: "¿Cómo sería el día perfecto que pudiéramos pasar juntos?",
-        nota: "Descríbelo desde que se despiertan hasta que se duermen."
+        pregunta: "¿Cómo se imaginan que van a ser el uno para el otro dentro de diez años?",
+        nota: "No solo dónde van a estar, sino cómo van a quererse."
       },
+      // 16 — ella
       {
         para: "ella",
         tag: "💕 Para ella",
         categoria: "❤ Lo más íntimo",
         emoji: "💌",
-        pregunta: "¿Hay algo que hayas querido decirme y nunca encontraste el momento?",
-        nota: "Este es el momento. Estoy aquí y te escucho."
+        pregunta: "¿Qué versión de ti misma quieres que yo nunca deje de ver, aunque el tiempo pase?",
+        nota: "Cuéntame quién eres cuando eres más tú."
       },
+      // 17 — el
       {
         para: "el",
         tag: "💙 Para él",
         categoria: "❤ Lo más íntimo",
         emoji: "🙏",
-        pregunta: "¿Por qué elegí quedarme y seguir eligiéndote cada día?",
-        nota: "Más allá de lo obvio. La razón de verdad."
+        pregunta: "¿Qué es lo que más me da miedo perder de esta relación si las cosas algún día cambian?",
+        nota: "La honestidad aquí vale más que la comodidad."
       },
+      // 18 — ambos
       {
         para: "ambos",
         tag: "✨ Para los dos",
         categoria: "🔥 Un poco más profundo",
         emoji: "⚡",
-        pregunta: "¿Qué es algo que admiran del otro que nunca le han dicho directamente?",
+        pregunta: "¿Qué cosa pequeña hace el otro que los hace sentir profundamente amados sin que lo digan?",
         nota: "Díganlo en voz alta. Ahora. Sin resumirlo."
       },
+      // 19 — ella
       {
         para: "ella",
         tag: "💕 Para ella",
         categoria: "❤ Lo más íntimo",
         emoji: "🌙",
-        pregunta: "¿Qué es lo que más valoras de tener a alguien como yo en tu vida?",
-        nota: "No hay prisa. Piénsalo de verdad."
+        pregunta: "¿Qué parte de ti misma has aprendido a querer más desde que estás conmigo?",
+        nota: "Tómate tu tiempo. Esta respuesta importa mucho."
       },
+      // 20 — ambos
       {
         para: "ambos",
         tag: "✨ Para los dos",
         categoria: "💖 La última",
         emoji: "💖",
-        pregunta: "¿Qué promesa pequeña pueden hacerse hoy, aquí, los dos juntos?",
-        nota: "No tiene que ser enorme. Que sea real, que sea de corazón."
+        pregunta: "¿Qué frase, de corazón, le dirían al otro si supieran que es lo último que van a decirse hoy?",
+        nota: "Sin filtros, sin adornos. Solo lo que de verdad sienten."
       },
     ];
 
-    // ══════════════════════════════════════════════════════
-    // ESTADO
-    // ══════════════════════════════════════════════════════
     let indiceActual = 0;
     let revelada = false;
 
@@ -653,7 +645,6 @@
     const jpControles  = document.getElementById('jpControles');
     const jpCategoria  = document.getElementById('jpCategoria');
 
-    // Colores por categoría
     const catColores = {
       "💫 Para comenzar":  "#f8a5c2",
       "🔥 Un poco más profundo": "#f97316",
@@ -666,34 +657,22 @@
     function cargarPregunta(idx) {
       const p = preguntas[idx];
       revelada = false;
-
-      // Resetear carta
       carta.classList.remove('volteada');
-
-      // Frente
       document.getElementById('jpIconoFrente').textContent = p.emoji;
       document.getElementById('jpNumDecorativo').textContent = String(idx + 1).padStart(2, '0');
-
-      // Atrás
       const paraTag = document.getElementById('jpParaTag');
       paraTag.textContent = p.tag;
       paraTag.className = 'jp-para ' + p.para;
       document.getElementById('jpPreguntaTexto').textContent = p.pregunta;
       document.getElementById('jpNotaTexto').innerHTML = p.nota ? `<strong>💭</strong> ${p.nota}` : '';
       document.getElementById('jpNumDecorativoAtras').textContent = String(idx + 1).padStart(2, '0');
-
-      // Categoría
       jpCategoria.textContent = p.categoria;
       const color = catColores[p.categoria] || '#e84393';
       jpCategoria.style.setProperty('--cat-color', color);
-
-      // Progreso
       const pct = Math.round((idx / preguntas.length) * 100);
       document.getElementById('jpProgressFill').style.width = pct + '%';
       document.getElementById('jpNumActual').textContent = `Carta ${idx + 1} de ${preguntas.length}`;
       document.getElementById('jpPorcentaje').textContent = pct + '%';
-
-      // Botones
       btnVoltear.disabled = false;
       btnVoltear.textContent = '✨ Revelar pregunta';
       btnSiguiente.disabled = true;
@@ -712,17 +691,13 @@
     function siguienteCarta() {
       if (!revelada) return;
       indiceActual++;
-
       if (indiceActual >= preguntas.length) {
         mostrarFinal();
         return;
       }
-
-      // Animación de salida
       carta.style.opacity = '0';
       carta.style.transform = 'translateX(60px) scale(0.95)';
       carta.style.transition = 'opacity 0.35s, transform 0.35s';
-
       setTimeout(() => {
         cargarPregunta(indiceActual);
         carta.style.transform = 'translateX(-40px) scale(0.95)';
@@ -781,7 +756,6 @@
       }
     }
 
-    // Estrellas de fondo
     const contenedorEstrellas = document.getElementById('estrellas');
     for (let i = 0; i < 80; i++) {
       const s = document.createElement('div');
@@ -796,7 +770,6 @@
       contenedorEstrellas.appendChild(s);
     }
 
-    // Iniciar
     cargarPregunta(0);
   </script>
 </body>

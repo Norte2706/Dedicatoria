@@ -22,15 +22,79 @@
     <button class="nav-menu" id="navMenu">☰</button>
   </nav>
 
-  <section class="proximamente-section">
+  <section class="playlist-section">
     <div class="prox-content">
       <div class="prox-emoji">🎵</div>
-      <h1 class="prox-titulo">Playlist</h1>
-      <p class="prox-sub">Próximamente...</p>
-      <p class="prox-mensaje">Estoy preparando algo muy especial para ti <br/>Vuelve pronto, amor.</p>
-      <div class="prox-corazones">
+      <h1 class="prox-titulo">Playlist especial</h1>
+      <p class="prox-sub">Canciones que me recuerdan a ti, y oficialmente son para ti </p>
+      <p class="prox-mensaje">Estas canciones me recuerdan a nosotros.Cada mes que cumplamos amor habra una nueva cancion por escuchar y hasta el momento van 7
+        y al completar las 12 canciones pos significa que cumplimos un año juntos y vendra una sorpresa para ti, asi que espero que te gusten y las disfrutes tanto como yo disfruto compartirlas contigo.
+      </p>
+      <div class="playlist-grid">
+        <article class="song-card">
+          <a href="https://www.youtube.com/watch?v=PovkZtMm9Mc" target="_blank" rel="noopener noreferrer">
+            <span class="song-number">Mes 1</span>
+            <h2>Entre Beso Y Beso</h2>
+            <p>La Arrolladora</p>
+            <span class="song-link">Escuchar</span>
+          </a>
+        </article>
+        <article class="song-card">
+          <a href="https://www.youtube.com/watch?v=PQlG1gznMBE" target="_blank" rel="noopener noreferrer">
+            <span class="song-number">Mes 2</span>
+            <h2>Amor Completo</h2>
+            <p>Mon Laferte</p>
+            <span class="song-link">Escuchar</span>
+          </a>
+        </article>
+        <article class="song-card">
+          <a href="https://www.youtube.com/watch?v=TtDe6f6NvI4" target="_blank" rel="noopener noreferrer">
+            <span class="song-number">Mes 3 </span>
+            <h2>Mi niña Hermosa</h2>
+            <p>Pablo Lacadiere</p>
+            <span class="song-link">Escuchar</span>
+          </a>
+        </article>
+        <article class="song-card">
+          <a href="https://www.youtube.com/watch?v=BVtZibUVXsA" target="_blank" rel="noopener noreferrer">
+            <span class="song-number">Mes 4</span>
+            <h2>Niña de mi corazon</h2>
+            <p>La Arrolladora</p>
+            <span class="song-link">Escuchar</span>
+          </a>
+        </article>
+        <article class="song-card">
+          <a href="https://www.youtube.com/watch?v=v3-9eDFDAFw" target="_blank" rel="noopener noreferrer">
+            <span class="song-number">Mes 5</span>
+            <h2>Tu jardin con enanitos</h2>
+            <p>Melendi</p>
+            <span class="song-link">Escuchar</span>
+          </a>
+        </article>
+        <article class="song-card">
+          <a href="https://www.youtube.com/watch?v=YkVbgpXXR0M" target="_blank" rel="noopener noreferrer">
+            <span class="song-number">Mes 6</span>
+            <h2>Yo te amo</h2>
+            <p>Chayanne</p>
+            <span class="song-link">Escuchar</span>
+          </a>
+        </article>
+        <article class="song-card">
+          <a href="https://www.youtube.com/watch?v=6r8mlDvfyZI" target="_blank" rel="noopener noreferrer">
+            <span class="song-number">Mes 7</span>
+            <h2>Me haces tanto bien</h2>
+            <p>Alejandro Fernandez</p>
+            <span class="song-link">Escuchar</span>
+          </a>
+        </article>
       </div>
-      <a href="index.html" class="prox-btn">← Volver al inicio</a>
+      <button class="btn-sorpresa" onclick="mostrarSorpresa()">🎁 Sorpresa</button>
+      <div class="sorpresa-modal hidden" id="sorpresaModal">
+        <div class="sorpresa-card">
+          <p>Aun no mi amor debe ser cuando se cumpla el añoo Te amo</p>
+          <button class="modal-close" onclick="cerrarSorpresa()">Cerrar</button>
+        </div>
+      </div>
     </div>
   </section>
 

@@ -353,4 +353,18 @@ function abrirWhatsApp() {
     }, 2500);
   }
 }
+
+function mostrarSorpresa() {
+  const modal = document.getElementById('sorpresaModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+  } 
+}
+
+function cerrarSorpresa() {
+  const modal = document.getElementById('sorpresaModal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
 /////////////////////////////////////
